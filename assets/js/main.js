@@ -15,25 +15,37 @@ let isModalShowing = false;
 let score = 0;
 let round = 1;
 let rolls = 0;
-rollDiceBtn.addEventListener("click", () => {
-    for (let i = 0; i < 5; i++) {
-        const diceNumber = Math.floor(Math.random() * 6) + 1;
-        diceValuesArr.push(diceNumber);
-    }
-    listOfAllDice.forEach((el, index) => {
-        el.textContent = diceValuesArr[index];
-    });
 
-})
+const rollDice = () => {
+  diceValuesArr = [];
+
+  for (let i = 0; i < 5; i++) {
+    const randomDice = Math.floor(Math.random() * 6) + 1;
+    diceValuesArr.push(randomDice);
+  };
+
+  listOfAllDice.forEach((dice, index) => {
+    dice.textContent = diceValuesArr[index];
+  });
+};
+
+rollDiceBtn.addEventListener("click", (e) => {
+  if (rolls < 3) {
+    rollDice();
+    rolls++;
+  } else {
+    alert("You must select a score before rolling again!");
+  }
+});
 
 rulesBtn.addEventListener("click", () => {
-    isModalShowing = !isModalShowing;
+  isModalShowing = !isModalShowing;
 
-    if (isModalShowing) {
-        rulesBtn.textContent = "Hide rules";
-        rulesContainer.style.display = "block";
-    } else {
-        rulesBtn.textContent = "Show rules";
-        rulesContainer.style.display = "none";
-    }
+  if (isModalShowing) {
+    rulesBtn.textContent = "Hide rules";
+    rulesContainer.style.display = "block";
+  } else {
+    rulesBtn.textContent = "Show rules";
+    rulesContainer.style.display = "none";
+  }
 });
