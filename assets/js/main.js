@@ -15,14 +15,25 @@ let isModalShowing = false;
 let score = 0;
 let round = 1;
 let rolls = 0;
+rollDiceBtn.addEventListener("click", () => {
+    for (let i = 0; i < 5; i++) {
+        const diceNumber = Math.floor(Math.random() * 6) + 1;
+        diceValuesArr.push(diceNumber);
+    }
+    listOfAllDice.forEach((el, index) => {
+        el.textContent = diceValuesArr[index];
+    });
 
-rulesBtn.addEventListener("click", (() => {
-  isModalShowing = true;
-  if (isModalShowing) {
-    rulesContainer.style.display = "none";
-    rulesBtn.textContent = "Hide rules";
-  } else {
-    rulesContainer.style.display = "block";
-    rulesBtn.textContent = "Show rules";
-  }
-}))
+})
+
+rulesBtn.addEventListener("click", () => {
+    isModalShowing = !isModalShowing;
+
+    if (isModalShowing) {
+        rulesBtn.textContent = "Hide rules";
+        rulesContainer.style.display = "block";
+    } else {
+        rulesBtn.textContent = "Show rules";
+        rulesContainer.style.display = "none";
+    }
+});
