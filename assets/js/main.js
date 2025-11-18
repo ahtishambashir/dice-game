@@ -40,6 +40,15 @@ const updateRadioOption = (index, score) => {
   scoreSpans[index].textContent = `, score = ${score}`;
 };
 
+const updateScore = (selectedValue, achieved) => {
+  const numericValue = Number(selectedValue);
+  score += numericValue;
+  totalScoreElement.textContent = score;
+  const li = document.createElement("li");
+  li.textContent = `${achieved} : ${selectedValue}`;
+  scoreHistory.appendChild(li);
+};
+
 const getHighestDuplicates = (arr) => {
   const counts = {};
 
@@ -80,7 +89,6 @@ const resetRadioOptions = () => {
   scoreInputs.forEach((input) => {
     input.disabled = true;
     input.checked = false;
-    input.value = "";
   });
 
   scoreSpans.forEach((span) => {
@@ -92,8 +100,8 @@ rollDiceBtn.addEventListener("click", () => {
   if (rolls === 3) {
     alert("You have made three rolls this round. Please select a score.");
   } else {
-    resetRadioOptions();
     rolls++;
+    resetRadioOptions();
     rollDice();
     updateStats();
     getHighestDuplicates(diceValuesArr);
