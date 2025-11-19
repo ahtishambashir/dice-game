@@ -47,25 +47,19 @@ const updateScore = (selectedValue, achieved) => {
   scoreHistory.innerHTML += `<li>${achieved} : ${selectedValue}</li>`;
 };
 
+
 const getHighestDuplicates = (arr) => {
   const counts = {};
 
   for (const num of arr) {
-    if (counts[num]) {
-      counts[num]++;
-    } else {
-      counts[num] = 1;
-    }
+    counts[num] = (counts[num] || 0) + 1;
   }
 
   let highestCount = 0;
 
   for (const num of arr) {
     const count = counts[num];
-    if (count >= 3 && count > highestCount) {
-      highestCount = count;
-    }
-    if (count >= 4 && count > highestCount) {
+    if (count > highestCount) {
       highestCount = count;
     }
   }
@@ -79,15 +73,14 @@ const getHighestDuplicates = (arr) => {
   if (highestCount >= 3) {
     updateRadioOption(0, sumOfAllDice);
   }
-
-  updateRadioOption(5, 0);
 };
+
 
 const detectFullHouse = (arr) => {
   const counts = {};
 
   for (const num of arr) {
-    counts[num] = counts[num] ? counts[num] + 1 : 1;
+    counts[num] = (counts[num] || 0) + 1;
   }
 
   const hasThreeOfAKind = Object.values(counts).includes(3);
@@ -96,8 +89,21 @@ const detectFullHouse = (arr) => {
   if (hasThreeOfAKind && hasPair) {
     updateRadioOption(2, 25);
   }
+};
 
-  updateRadioOption(5, 0);
+const checkForStraights = (arr) => {
+  const sorted = [...arr].sort((a, b) => a - b);
+  const unique = [...new Set(sorted)];
+  const str = unique.join("");
+
+  const smallStraights = ["1234", "2345", "3456"];
+  const largeStraights = ["12345", "23456"];
+  if (smallStraights.some(seq => str.includes(seq))) {
+    updateRadioOption(3, 30);
+  }
+  if (largeStraights.includes(str)) {
+    updateRadioOption(4, 40);
+  }
 };
 
 const resetRadioOptions = () => {
@@ -130,28 +136,6 @@ const resetGame = () => {
   resetRadioOptions();
 };
 
-const checkForStraights = (arr) => {
-  const uniqueSorted = [...new Set(arr)].sort((a, b) => a - b);
-  const str = uniqueSorted.join("");
-
-  const largeStraight = (str === "12345" || str === "23456");
-
-  const smallStraight =
-    str.includes("1234") ||
-    str.includes("2345") ||
-    str.includes("3456");
-
-  if (largeStraight) {
-    updateRadioOption(3, 30);
-    updateRadioOption(4, 40);
-  }
-  else if (smallStraight) {
-    updateRadioOption(3, 30);
-  }
-  updateRadioOption(5, 0);
-};
-
-
 rollDiceBtn.addEventListener("click", () => {
   if (rolls === 3) {
     alert("You have made three rolls this round. Please select a score.");
@@ -163,8 +147,11 @@ rollDiceBtn.addEventListener("click", () => {
     getHighestDuplicates(diceValuesArr);
     detectFullHouse(diceValuesArr);
     checkForStraights(diceValuesArr);
+    updateRadioOption(5, 0);
   }
 });
+
+
 
 rulesBtn.addEventListener("click", () => {
   isModalShowing = !isModalShowing;
